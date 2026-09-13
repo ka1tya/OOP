@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from utils import create_dialog, close_dialog
  
 def show_step2(parent):
     dialog = create_dialog(parent, "Work2")
