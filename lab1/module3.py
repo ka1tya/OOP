@@ -6,8 +6,6 @@ def show_step2(parent):
     dialog = create_dialog(parent, "Work2")
     result = [0]
  
-    ttk.Label(dialog).pack(padx=20, pady=20)
- 
     buttons = ttk.Frame(dialog)
     buttons.pack(pady=(0, 16))
  

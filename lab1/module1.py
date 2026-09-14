@@ -7,8 +7,6 @@ def show_work1(parent):
     dialog = create_dialog(parent, "Робота1")
     result = [0]
  
-    ttk.Label(dialog).pack(padx=16, pady=(16, 4))
- 
     value_var = tk.DoubleVar(value=1)
     value_label = ttk.Label(dialog, text="1")
  
