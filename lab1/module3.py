@@ -3,7 +3,7 @@ from tkinter import ttk
 from utils import create_dialog, close_dialog
  
 def show_step2(parent):
-    dialog = create_dialog(parent, "Work2")
+    dialog = create_dialog(parent, "Робота2")
     result = [0]
  
     buttons = ttk.Frame(dialog)

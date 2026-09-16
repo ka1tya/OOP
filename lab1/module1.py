@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from utils import create_dialog, close_dialog
  
- 
 def show_work1(parent):
     dialog = create_dialog(parent, "Робота1")
     result = [0]

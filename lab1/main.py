@@ -1,17 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
- 
 from module1 import show_work1
 from module2 import show_step1
 from module3 import show_step2
- 
  
 def handle_work1():
     value = show_work1(root)
  
     if value != 0:  
         message_var.set(str(value))
- 
  
 def handle_work2():
     while True:
