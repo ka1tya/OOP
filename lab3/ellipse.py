@@ -1,6 +1,6 @@
 from shape import Shape
  
-class Rectangle(Shape):
+class Ellipse(Shape):
     def draw(self, canvas):
         dx = self._x2 - self._x1
         dy = self._y2 - self._y1
