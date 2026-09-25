@@ -10,5 +10,5 @@ class Ellipse(Shape):
         right = self._x1 + dx
         bottom = self._y1 + dy
  
-        canvas.create_rectangle(left, top, right, bottom, outline="black", fill="white", width=2)
+        canvas.create_oval(left, top, right, bottom, outline="black", fill="white", width=2)
  
