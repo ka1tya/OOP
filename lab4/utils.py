@@ -9,8 +9,7 @@ def add_tooltip(widget, text):
         win = tk.Toplevel(widget)
         win.overrideredirect(True)  
         win.geometry(f"+{event.x_root + 12}+{event.y_root + 12}")
-        label = tk.Label(win, text=text, background="#ffffe0",
-                         relief="solid", borderwidth=1, padx=4, pady=2)
+        label = tk.Label(win, text=text, background="#ffffe0", relief="solid", borderwidth=1, padx=4, pady=2)
         label.pack()
         state["window"] = win
  

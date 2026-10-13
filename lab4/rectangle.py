@@ -9,5 +9,4 @@ class Rectangle(Shape):
             x1, y1, x2, y2 = self._x1, self._y1, self._x2, self._y2
  
         color, fill, dash = self._style(self.RECT_OUTLINE, self.RECT_FILL)
-        canvas.create_rectangle(x1, y1, x2, y2,
-                                outline=color, fill=fill, width=2, dash=dash)
+        canvas.create_rectangle(x1, y1, x2, y2, outline=color, fill=fill, width=2, dash=dash)

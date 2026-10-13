@@ -12,5 +12,4 @@ class Ellipse(Shape):
         dy = y2 - y1
  
         color, fill, dash = self._style(self.ELLIPSE_OUTLINE, self.ELLIPSE_FILL)
-        canvas.create_oval(x1 - dx, y1 - dy, x1 + dx, y1 + dy,
-                           outline=color, fill=fill, width=2, dash=dash)
+        canvas.create_oval(x1 - dx, y1 - dy, x1 + dx, y1 + dy, outline=color, fill=fill, width=2, dash=dash)
