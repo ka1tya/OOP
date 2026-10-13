@@ -51,10 +51,10 @@ def ellipse_icon():
  
 def line_circles_icon():
     icon = _new_icon()
-    for i in range(4, ICON_SIZE - 4):
-        icon.put(FG, (i, ICON_SIZE - 1 - i))
-    icon.put(FG, to=(1, ICON_SIZE - 6, 6, ICON_SIZE - 1))
-    icon.put(FG, to=(ICON_SIZE - 6, 1, ICON_SIZE - 1, 6))
+    for i in range(4):
+        cx = 3 + i * 5
+        cy = 16 - i * 4
+        icon.put(FG, to=(cx - 1, cy - 1, cx + 2, cy + 2))
     return icon
  
 def cube_icon():
