@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import ttk
  
 class MyTable:
-    COLUMN_IDS = ("name", "x1", "y1", "x2", "y2")
-    COLUMN_TITLES = ("Назва", "x1", "y1", "x2", "y2")
+    COLUMN_IDS = ("object", "x1", "y1", "x2", "y2")
+    COLUMN_TITLES = ("Об'єкт", "x1", "y1", "x2", "y2")
  
     def __init__(self, parent, on_select=None, on_delete=None, on_close=None):
         self.on_select = on_select 
@@ -31,7 +31,7 @@ class MyTable:
         for column_id, title in zip(self.COLUMN_IDS, self.COLUMN_TITLES):
             self.tree.heading(column_id, text=title)
             self.tree.column(column_id, width=60, anchor="center")
-        self.tree.column("name", width=170, anchor="w")
+        self.tree.column("object", width=170, anchor="w")
  
         scrollbar = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)

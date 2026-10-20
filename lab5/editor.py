@@ -24,18 +24,18 @@ class MyEditor:
     _allow_create = False
  
     @staticmethod
-    def instance(root=None):
-        if not hasattr(MyEditor.instance, "obj"):
+    def singleton(root=None):
+        if not hasattr(MyEditor.singleton, "obj"):
             if root is None:
-                raise RuntimeError("Перший виклик instance() потребує вікно root")
+                raise RuntimeError("Перший виклик singleton() потребує вікно root")
             MyEditor._allow_create = True
-            MyEditor.instance.obj = MyEditor(root)
+            MyEditor.singleton.obj = MyEditor(root)
             MyEditor._allow_create = False
-        return MyEditor.instance.obj
+        return MyEditor.singleton.obj
  
     def __init__(self, root):
         if not MyEditor._allow_create:
-            raise RuntimeError("MyEditor - Singleton: використовуйте MyEditor.instance()")
+            raise RuntimeError("MyEditor - Singleton: використовуйте MyEditor.singleton()")
  
         self.root = root
         self.root.title("lab5")
