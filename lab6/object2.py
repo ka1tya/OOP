@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from messenger import PORT_OBJECT2
 from object_base import Object
+from theme import MONO_FONT
 
 class Object2(Object):
     TITLE = "Object2"
@@ -13,8 +14,7 @@ class Object2(Object):
 
         frame = ttk.Frame(self.root)
         frame.pack(padx=10, pady=(0, 10))
-        self.text = tk.Text(frame, width=30, height=6,
-                            font=("Courier", 11), state="disabled")
+        self.text = tk.Text(frame, width=30, height=6, font=(MONO_FONT, 11), state="disabled")
         self.text.pack()
 
     def on_command(self, command, args):

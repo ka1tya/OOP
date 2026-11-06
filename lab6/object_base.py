@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from messenger import open_server, handle_one_request
+from theme import apply_theme
 
 class Object:
     TITLE = "Object"  
@@ -12,13 +13,10 @@ class Object:
             raise SystemExit(f"{self.TITLE} вже запущено")
 
         self.root = tk.Tk()
-        self.root.option_add("*Font", "Arial 10")
-        ttk.Style().theme_use("clam")
         self.root.title(self.TITLE)
-
+        apply_theme(self.root)
         self.state_var = tk.StringVar()
-        ttk.Label(self.root, textvariable=self.state_var).pack(
-            anchor="w", padx=10, pady=(10, 4))
+        ttk.Label(self.root, textvariable=self.state_var).pack(anchor="w", padx=10, pady=(10, 4))
 
         self.build_window()  
 

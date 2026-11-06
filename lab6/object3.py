@@ -1,8 +1,9 @@
-from fractions import Fraction
 import tkinter as tk
 from tkinter import ttk
+from fractions import Fraction
 from messenger import PORT_OBJECT3
 from object_base import Object
+from theme import RESULT_FONT
 
 def parse_matrix(text):
     lines = text.strip().splitlines()
@@ -63,14 +64,12 @@ class Object3(Object):
 
         self.info_var = tk.StringVar(value="Матриці ще немає")
         self.result_var = tk.StringVar(value="-")
-        ttk.Label(self.root, textvariable=self.info_var).pack(padx=20, pady=(10, 0))
-        ttk.Label(self.root, textvariable=self.result_var,
-                  font=("Arial", 18, "bold")).pack(padx=20, pady=(6, 16))
+        ttk.Label(self.root, textvariable=self.info_var, style="Muted.TLabel").pack(padx=20, pady=(10, 0))
+        ttk.Label(self.root, textvariable=self.result_var, style="Result.TLabel", font=RESULT_FONT).pack(padx=20, pady=(6, 16))
 
     def on_command(self, command, args):
         if command == "SHOW":
             return self.show_determinant()
-        # усі інші команди - як у базового класу
         return Object.on_command(self, command, args)
 
     def show_determinant(self):
