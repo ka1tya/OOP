@@ -34,6 +34,13 @@ class TestImageDocument(unittest.TestCase):
             self.assertEqual(image.format, "BMP")
             self.assertEqual(image.mode, "RGB")
 
+        with open(path, "rb") as file:
+            header = file.read(30)
+
+        bits_per_pixel = int.from_bytes(header[28:30], "little")
+
+        self.assertEqual(bits_per_pixel, 24)
+
     def test_load_invalid_file(self):
         path = Path(self.temp_dir.name) / "invalid.bmp"
         path.write_text("Invalid image")
