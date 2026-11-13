@@ -21,27 +21,11 @@ class ImageViewer(QScrollArea):
 
         qimage = QImage(image.tobytes(), width, height, width * 3, QImage.Format.Format_RGB888).copy()
 
-        self.original_pixmap = QPixmap.fromImage(qimage)
-        self.update_image_size()
+        pixmap = QPixmap.fromImage(qimage)
 
-    def update_image_size(self):
-        if self.original_pixmap is None:
-            return
-
-        scaled_pixmap = self.original_pixmap.scaled(
-            self.viewport().size(), 
-            Qt.AspectRatioMode.KeepAspectRatio, 
-            Qt.TransformationMode.SmoothTransformation
-        )
-
-        self.image_label.setPixmap(scaled_pixmap)
-        self.image_label.resize(scaled_pixmap.size())
-
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-        self.update_image_size()
+        self.image_label.setPixmap(pixmap)
+        self.image_label.resize(pixmap.size())
 
     def clear(self):
-        self.original_pixmap = None
         self.image_label.clear()
         self.image_label.resize(0, 0)
