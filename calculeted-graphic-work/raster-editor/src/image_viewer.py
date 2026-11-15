@@ -11,7 +11,6 @@ class ImageViewer(QScrollArea):
         self.setWidget(self.image_label)
         self.setWidgetResizable(False)
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.original_pixmap = None
 
     def display_image(self, image):
         if image is None:
@@ -25,7 +24,3 @@ class ImageViewer(QScrollArea):
 
         self.image_label.setPixmap(pixmap)
         self.image_label.resize(pixmap.size())
-
-    def clear(self):
-        self.image_label.clear()
-        self.image_label.resize(0, 0)

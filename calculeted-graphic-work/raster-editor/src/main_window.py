@@ -1,7 +1,9 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 from image_document import ImageDocument
 from image_viewer import ImageViewer
-from toolbar import MainToolBar, EditMode
+from image_processor import ImageProcessor
+from toolbar import MainToolBar, AdjustmentPanel, EditMode
 
 MODE_NAMES = {
     EditMode.BRIGHTNESS: "Світлота",
@@ -14,15 +16,19 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Редактор растрових зображень")
-        self.resize(1000, 700)
+        self.resize(1100, 750)
 
         self.document = ImageDocument()
         self.viewer = ImageViewer()
+        self.processor = ImageProcessor()
+
+        self.original_image = None
 
         self.setCentralWidget(self.viewer)
 
         self.create_toolbar()
         self.create_menu()
+        self.create_adjustment_panel()
 
         self.statusBar().showMessage("Готово")
 
@@ -43,6 +49,12 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.toolbar.save_action)
         file_menu.addAction(self.toolbar.save_as_action)
 
+    def create_adjustment_panel(self):
+        self.adjustment_panel = AdjustmentPanel(self)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.adjustment_panel)
+
+        self.adjustment_panel.values_changed.connect(self.apply_processing)
+
     def open_image(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Відкрити", "", "BMP Images (*.bmp)")
 
@@ -51,12 +63,32 @@ class MainWindow(QMainWindow):
 
         try:
             self.document.load(file_path)
-            self.viewer.display_image(self.document.get_image())
+            self.original_image = self.document.get_image()
+
+            self.adjustment_panel.reset()
             self.toolbar.set_image_actions_enabled(True)
             self.statusBar().showMessage(f"Відкрито: {file_path}")
 
         except Exception as error:
             QMessageBox.critical(self, "Помилка відкриття", str(error))
+
+    def apply_processing(self):
+        if self.original_image is None:
+            return
+
+        values = self.adjustment_panel.values()
+
+        try:
+            result = self.processor.brightness(self.original_image, values["brightness"])
+            result = self.processor.contrast(result, values["contrast"])
+            result = self.processor.rgb(result, red=values["red"], green=values["green"], blue=values["blue"])
+
+        except Exception as error:
+            QMessageBox.critical(self, "Помилка обробки", str(error))
+            return
+
+        self.document.image = result
+        self.viewer.display_image(result)
 
     def save_image(self):
         if not self.document.is_loaded():
@@ -90,4 +122,5 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Помилка запису", str(error))
 
     def on_mode_changed(self, mode):
+        self.adjustment_panel.show_mode(mode)
         self.statusBar().showMessage(f"Режим: {MODE_NAMES[mode]}")

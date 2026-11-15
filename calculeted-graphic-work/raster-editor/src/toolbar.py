@@ -1,7 +1,7 @@
 from enum import Enum
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QAction, QActionGroup
-from PySide6.QtWidgets import QStyle, QToolBar
+from PySide6.QtWidgets import QDockWidget, QFormLayout, QGroupBox, QLabel, QPushButton, QSlider, QStyle, QToolBar, QVBoxLayout, QWidget
 
 class EditMode(Enum):
     BRIGHTNESS = "brightness"
@@ -89,15 +89,110 @@ class MainToolBar(QToolBar):
     def on_mode_triggered(self, action):
         self.mode_changed.emit(action.data())
 
-    def current_mode(self):
-        action = self.mode_group.checkedAction()
-
-        if action is None:
-            return None
-
-        return action.data()
-
     def set_image_actions_enabled(self, enabled):
         self.save_action.setEnabled(enabled)
         self.save_as_action.setEnabled(enabled)
         self.mode_group.setEnabled(enabled)
+
+class AdjustmentPanel(QDockWidget):
+    values_changed = Signal()
+
+    DEFAULT_VALUE = 100
+
+    def __init__(self, parent=None):
+        super().__init__("Обробка зображення", parent)
+
+        self.setFeatures(
+            QDockWidget.DockWidgetFeature.DockWidgetMovable
+            | QDockWidget.DockWidgetFeature.DockWidgetClosable
+        )
+
+        self.sliders = {}
+        self.value_labels = {}
+
+        panel = QWidget()
+        layout = QVBoxLayout(panel)
+
+        self.groups = {
+            EditMode.BRIGHTNESS: self.create_group(
+                "Світлота", [("brightness", "Світлота:")]
+            ),
+            EditMode.CONTRAST: self.create_group(
+                "Контраст", [("contrast", "Контраст:")]
+            ),
+            EditMode.RGB: self.create_group(
+                "Корекція RGB",
+                [
+                    ("red", "Червоний (R):"),
+                    ("green", "Зелений (G):"),
+                    ("blue", "Синій (B):"),
+                ],
+            ),
+        }
+
+        for group in self.groups.values():
+            layout.addWidget(group)
+
+        reset_button = QPushButton("Скинути налаштування")
+        reset_button.setToolTip("Повернути всі параметри до 100%")
+        reset_button.clicked.connect(self.reset)
+
+        layout.addWidget(reset_button)
+        layout.addStretch()
+
+        self.setWidget(panel)
+        self.hide()
+
+    def create_group(self, title, sliders):
+        group = QGroupBox(title)
+        form = QFormLayout(group)
+
+        for name, label in sliders:
+            form.addRow(label, self.create_slider_row(name))
+
+        return group
+
+    def create_slider_row(self, name):
+        slider = QSlider(Qt.Orientation.Horizontal)
+        slider.setRange(0, 200)
+        slider.setValue(self.DEFAULT_VALUE)
+
+        value_label = QLabel(f"{self.DEFAULT_VALUE}%")
+        value_label.setMinimumWidth(40)
+
+        slider.valueChanged.connect(
+            lambda value, label=value_label: label.setText(f"{value}%")
+        )
+        slider.valueChanged.connect(self.values_changed)
+
+        self.sliders[name] = slider
+        self.value_labels[name] = value_label
+
+        row = QWidget()
+        layout = QVBoxLayout(row)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(slider)
+        layout.addWidget(value_label)
+
+        return row
+
+    def show_mode(self, mode):
+        for group_mode, group in self.groups.items():
+            group.setVisible(group_mode == mode)
+
+        self.show()
+
+    def values(self):
+        return {
+            name: slider.value() / 100
+            for name, slider in self.sliders.items()
+        }
+
+    def reset(self):
+        for name, slider in self.sliders.items():
+            slider.blockSignals(True)
+            slider.setValue(self.DEFAULT_VALUE)
+            slider.blockSignals(False)
+            self.value_labels[name].setText(f"{self.DEFAULT_VALUE}%")
+
+        self.values_changed.emit()
