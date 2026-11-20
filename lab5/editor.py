@@ -8,7 +8,6 @@ from line_circles import LineCircles
 from cube import Cube
 from icons import (point_icon, line_icon, rectangle_icon, ellipse_icon, line_circles_icon, cube_icon)
 from utils import add_tooltip
-from table import MyTable
 from file import save_rows, load_rows
  
 SHAPE_TYPES = {
@@ -166,17 +165,17 @@ class MyEditor:
         self.update_table()
  
     # Вікно таблиці 
+    def set_table(self, table):
+        self.table = table
+
     def on_toggle_table(self):
+        if self.table is None:
+            return
         if self.table_var.get():
-            self.table = MyTable(
-                self.root,
-                on_select=self.on_table_select,
-                on_delete=self.on_table_delete,
-                on_close=self.on_table_closed,
-            )
             self.update_table()
-        elif self.table is not None:
-            self.table.close()
+            self.table.show()
+        else:
+            self.table.hide()
             self.on_table_closed()
  
     def update_table(self):
@@ -201,8 +200,7 @@ class MyEditor:
         self.update_table()
  
     def on_table_closed(self):
-        self.table = None
-        self.table_var.set(False)  
+        self.table_var.set(False)
         self.selected_index = None
         self.redraw_all()
  

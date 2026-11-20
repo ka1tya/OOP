@@ -10,18 +10,14 @@ class MyTable:
         self.on_delete = on_delete  
         self.on_close = on_close   
  
-        self._selected = None 
- 
+        self._selected = None
+        self._parent = parent
+
         self.window = tk.Toplevel(parent)
+        self.window.withdraw()  
         self.window.title("Таблиця об'єктів")
-        self.window.transient(parent)  
-        
-        x = parent.winfo_rootx() + parent.winfo_width() + 10
-        if x + 440 > parent.winfo_screenwidth():
-            x = parent.winfo_rootx() + 60
-        y = parent.winfo_rooty()
-        self.window.geometry(f"440x300+{x}+{y}")
- 
+        self.window.transient(parent)
+
         self.window.protocol("WM_DELETE_WINDOW", self._handle_close)
  
         frame = ttk.Frame(self.window)
@@ -50,8 +46,17 @@ class MyTable:
             self.tree.insert("", "end", values=row)
         self._selected = None
  
-    def close(self):
-        self.window.destroy()
+    def show(self):
+        parent = self._parent
+        x = parent.winfo_rootx() + parent.winfo_width() + 10
+        if x + 440 > parent.winfo_screenwidth():
+            x = parent.winfo_rootx() + 60
+        y = parent.winfo_rooty()
+        self.window.geometry(f"440x300+{x}+{y}")
+        self.window.deiconify()
+
+    def hide(self):
+        self.window.withdraw()
  
     # Внутрішні обробники подій
     def _handle_select(self, event):
@@ -72,6 +77,6 @@ class MyTable:
             self.on_delete(self._selected)
  
     def _handle_close(self):
-        self.window.destroy()
+        self.hide()
         if self.on_close is not None:
             self.on_close()
