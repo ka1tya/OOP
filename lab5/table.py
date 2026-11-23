@@ -16,7 +16,6 @@ class MyTable:
         self.window = tk.Toplevel(parent)
         self.window.withdraw()  
         self.window.title("Таблиця об'єктів")
-        self.window.transient(parent)
 
         self.window.protocol("WM_DELETE_WINDOW", self._handle_close)
  
@@ -53,6 +52,7 @@ class MyTable:
             x = parent.winfo_rootx() + 60
         y = parent.winfo_rooty()
         self.window.geometry(f"440x300+{x}+{y}")
+        self.window.transient(parent)
         self.window.deiconify()
 
     def hide(self):
