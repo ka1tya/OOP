@@ -14,8 +14,13 @@ class Object2(Object):
 
         frame = ttk.Frame(self.root)
         frame.pack(padx=10, pady=(0, 10))
-        self.text = tk.Text(frame, width=30, height=6, font=(MONO_FONT, 11), state="disabled")
-        self.text.pack()
+        self.text = tk.Text(frame, width=30, height=6, wrap="none", font=(MONO_FONT, 11), state="disabled")
+        y_scroll = ttk.Scrollbar(frame, orient="vertical", command=self.text.yview)
+        x_scroll = ttk.Scrollbar(frame, orient="horizontal", command=self.text.xview)
+        self.text.configure(yscrollcommand=y_scroll.set, xscrollcommand=x_scroll.set)
+        self.text.grid(row=0, column=0)
+        y_scroll.grid(row=0, column=1, sticky="ns")
+        x_scroll.grid(row=1, column=0, sticky="ew")
 
     def on_command(self, command, args):
         if command == "GENERATE":
@@ -44,7 +49,7 @@ class Object2(Object):
                 line += str(value).rjust(width)
             lines.append(line)
 
-        self.text.config(state="normal", width=n * width, height=n)
+        self.text.config(state="normal", width=min(n * width, 60), height=min(n, 15))
         self.text.delete("1.0", "end")
         self.text.insert("1.0", "\n".join(lines))
         self.text.config(state="disabled")

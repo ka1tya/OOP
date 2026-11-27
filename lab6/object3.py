@@ -65,7 +65,7 @@ class Object3(Object):
         self.info_var = tk.StringVar(value="Матриці ще немає")
         self.result_var = tk.StringVar(value="-")
         ttk.Label(self.root, textvariable=self.info_var, style="Muted.TLabel").pack(padx=20, pady=(10, 0))
-        ttk.Label(self.root, textvariable=self.result_var, style="Result.TLabel", font=RESULT_FONT).pack(padx=20, pady=(6, 16))
+        ttk.Label(self.root, textvariable=self.result_var, style="Result.TLabel", font=RESULT_FONT, wraplength=400).pack(padx=20, pady=(6, 16))
 
     def on_command(self, command, args):
         if command == "SHOW":

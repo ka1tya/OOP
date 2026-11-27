@@ -11,7 +11,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 WINDOW_W = 420
 WINDOW_H = 330
-MAX_N = 15
 
 def parse_parameters(n_text, min_text, max_text):
     try:
@@ -21,8 +20,8 @@ def parse_parameters(n_text, min_text, max_text):
     except ValueError:
         raise ValueError("n, Min і Max мають бути цілими числами")
 
-    if n < 1 or n > MAX_N:
-        raise ValueError(f"n має бути від 1 до {MAX_N}.")
+    if n < 1:
+        raise ValueError("n має бути не менше 1")
     if min_value > max_value:
         raise ValueError("Min не може бути більшим за Max")
     return n, min_value, max_value
@@ -89,9 +88,9 @@ class Lab6:
         dialog.wait_visibility()
         dialog.grab_set()
 
-        n_var = tk.StringVar(value="4")
-        min_var = tk.StringVar(value="-9")
-        max_var = tk.StringVar(value="9")
+        n_var = tk.StringVar()
+        min_var = tk.StringVar()
+        max_var = tk.StringVar()
 
         fields = (("n (розмір матриці):", n_var), ("Min:", min_var), ("Max:", max_var))
         for row, (label_text, var) in enumerate(fields):
@@ -166,7 +165,7 @@ class Lab6:
         self.set_state("Object2 створює матрицю")
         command = f"GENERATE {n} {min_value} {max_value}"
         self.log(f"Lab6 -> Object2: {command}")
-        reply = send_message(PORT_OBJECT2, command, timeout=10)
+        reply = send_message(PORT_OBJECT2, command, timeout=60)
         self.log(f"Object2 -> Lab6: {reply}")
         if reply != "OK":
             self.set_state("помилка")
@@ -180,7 +179,7 @@ class Lab6:
 
         self.set_state("Object3 рахує визначник")
         self.log("Lab6 -> Object3: SHOW")
-        reply = send_message(PORT_OBJECT3, "SHOW", timeout=10)
+        reply = send_message(PORT_OBJECT3, "SHOW", timeout=60)
         self.log(f"Object3 -> Lab6: {reply}")
         if reply is None or not reply.startswith("OK"):
             self.set_state("помилка")
